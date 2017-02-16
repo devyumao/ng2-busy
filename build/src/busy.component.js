@@ -29,7 +29,7 @@ var BusyComponent = (function () {
     BusyComponent = __decorate([
         core_1.Component({
             selector: 'ng-busy',
-            template: "\n        <div [class]=\"wrapperClass\" *ngIf=\"isActive()\" @flyInOut>\n            <DynamicComponent [componentTemplate]=\"template\" [componentInputData]=\"context\">\n            </DynamicComponent>\n        </div>\n    ",
+            template: "\n        <div [class]=\"wrapperClass\" *ngIf=\"isActive()\" @flyInOut>\n            <DynamicComponent [componentTemplate]=\"template\" [componentContext]=\"context\" [componentModules]=\"modules\">\n            </DynamicComponent>\n        </div>\n    ",
             animations: [
                 core_1.trigger('flyInOut', [
                     core_1.transition('void => *', [

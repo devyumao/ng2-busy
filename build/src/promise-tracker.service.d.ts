@@ -1,3 +1,4 @@
+/// <reference types="core-js" />
 import { Subscription } from 'rxjs/Subscription';
 export declare class PromiseTrackerService {
     promiseList: Array<Promise<any> | Subscription>;

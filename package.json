@@ -29,7 +29,11 @@
     "watch:busy": "npm run watch",
     "build:demo": "cross-env NODE_ENV=demo webpack --progress",
     "watch:demo": "cross-env NODE_ENV=demo webpack-dev-server --inline --progress --profile --colors --watch --display-error-details --display-cached --content-base demo/asset",
-    "test": "cross-env NODE_ENV=test webpack --inline --progress --colors --watch --content-base test"
+    "test": "cross-env NODE_ENV=test webpack --inline --progress --colors --watch --content-base test",
+    "tsc": "node_modules/.bin/tsc",
+    "pretsc.src": "node_modules/.bin/rimraf build/src/**/*.d.ts",
+    "tsc.src": "npm run tsc -- -p src/",
+    "tsc.demo": "npm run tsc -- -p demo/"
   },
   "dependencies": {
     "ts-metadata-helper": "~0.0.4",
@@ -44,6 +48,8 @@
     "@angular/platform-browser": "~2.4.0",
     "@angular/platform-browser-dynamic": "~2.4.0",
     "@angular/router": "~3.4.0",
+    "@types/core-js": "^0.9.35",
+    "@types/node": "^7.0.5",
     "autoprefixer": "^6.3.7",
     "awesome-typescript-loader": "^0.19.1",
     "bootstrap": "4.0.0-alpha.2",

@@ -7,6 +7,7 @@ import {Subscription} from 'rxjs/Subscription';
 
 export class BusyConfig implements IBusyConfig {
     template: string;
+    modules: any[];
     delay: number;
     minDuration: number;
     backdrop: boolean;
@@ -22,6 +23,7 @@ export class BusyConfig implements IBusyConfig {
 
 export interface IBusyConfig {
     template?: string;
+    modules?: any[];
     delay?: number;
     minDuration?: number;
     backdrop?: boolean;
@@ -52,6 +54,7 @@ export const BUSY_CONFIG_DEFAULTS = {
             </div>
         </div>
     `,
+    modules: [],
     delay: 0,
     minDuration: 0,
     backdrop: true,

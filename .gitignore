@@ -11,3 +11,6 @@ Thumbs.db
 
 # Style scripts
 build/busy.js
+
+#Webstorm IDE settings
+/.idea

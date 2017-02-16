@@ -88,6 +88,7 @@ var BusyDirective = (function () {
         instance.context.message = message;
         instance.wrapperClass = wrapperClass;
         instance.template = template;
+        instance.modules = this.optionsNorm.modules;
     };
     __decorate([
         core_1.Input('ngBusy'), 

@@ -134,5 +134,6 @@ export class BusyDirective implements DoCheck {
         instance.context.message = message;
         instance.wrapperClass = wrapperClass;
         instance.template = template;
+        instance.modules = this.optionsNorm.modules;
     }
 }

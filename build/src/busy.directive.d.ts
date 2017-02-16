@@ -16,7 +16,7 @@ export declare class BusyDirective implements DoCheck {
     private backdropRef;
     constructor(service: BusyService, tracker: PromiseTrackerService, cfResolver: ComponentFactoryResolver, vcRef: ViewContainerRef, injector: Injector);
     private normalizeOptions(options);
-    dectectOptionsChange(): boolean;
+    private dectectOptionsChange();
     ngDoCheck(): void;
     ngOnDestroy(): void;
     private destroyComponents();

@@ -8,6 +8,7 @@ export declare class BusyComponent {
     wrapperClass: string;
     template: string;
     context: IBusyContext;
+    modules: any[];
     constructor(tracker: PromiseTrackerService);
     isActive(): boolean;
 }
