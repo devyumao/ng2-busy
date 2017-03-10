@@ -1,3 +1,7 @@
+/**
+ * @file Directive: Busy
+ * @author yumao<yuzhang.lille@gmail.com>
+ */
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -8,13 +12,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var Subscription_1 = require('rxjs/Subscription');
-var util_1 = require('./util');
-var promise_tracker_service_1 = require('./promise-tracker.service');
-var busy_service_1 = require('./busy.service');
-var busy_component_1 = require('./busy.component');
-var busy_backdrop_component_1 = require('./busy-backdrop.component');
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = require("@angular/core");
+var Subscription_1 = require("rxjs/Subscription");
+var util_1 = require("./util");
+var promise_tracker_service_1 = require("./promise-tracker.service");
+var busy_service_1 = require("./busy.service");
+var busy_component_1 = require("./busy.component");
+var busy_backdrop_component_1 = require("./busy-backdrop.component");
+/**
+ * ### Syntax
+ *
+ * - `<div [ngBusy]="busy">...</div>`
+ * - `<div [ngBusy]="[busyA, busyB, busyC]">...</div>`
+ * - `<div [ngBusy]="{busy: busy, message: 'Loading...', backdrop: false, delay: 200, minDuration: 600}">...</div>`
+ */
 var BusyDirective = (function () {
     function BusyDirective(service, tracker, cfResolver, vcRef, injector) {
         this.service = service;
@@ -45,6 +57,7 @@ var BusyDirective = (function () {
         this.optionsRecord = this.optionsNorm;
         return true;
     };
+    // As ngOnChanges does not work on Object detection, ngDoCheck is using
     BusyDirective.prototype.ngDoCheck = function () {
         var options = this.optionsNorm = this.normalizeOptions(this.options);
         if (!this.dectectOptionsChange()) {
@@ -89,18 +102,22 @@ var BusyDirective = (function () {
         instance.wrapperClass = wrapperClass;
         instance.template = template;
     };
-    __decorate([
-        core_1.Input('ngBusy'), 
-        __metadata('design:type', Object)
-    ], BusyDirective.prototype, "options", void 0);
-    BusyDirective = __decorate([
-        core_1.Directive({
-            selector: '[ngBusy]',
-            providers: [promise_tracker_service_1.PromiseTrackerService]
-        }), 
-        __metadata('design:paramtypes', [busy_service_1.BusyService, promise_tracker_service_1.PromiseTrackerService, core_1.ComponentFactoryResolver, core_1.ViewContainerRef, core_1.Injector])
-    ], BusyDirective);
     return BusyDirective;
 }());
+__decorate([
+    core_1.Input('ngBusy'),
+    __metadata("design:type", Object)
+], BusyDirective.prototype, "options", void 0);
+BusyDirective = __decorate([
+    core_1.Directive({
+        selector: '[ngBusy]',
+        providers: [promise_tracker_service_1.PromiseTrackerService]
+    }),
+    __metadata("design:paramtypes", [busy_service_1.BusyService,
+        promise_tracker_service_1.PromiseTrackerService,
+        core_1.ComponentFactoryResolver,
+        core_1.ViewContainerRef,
+        core_1.Injector])
+], BusyDirective);
 exports.BusyDirective = BusyDirective;
 //# sourceMappingURL=busy.directive.js.map

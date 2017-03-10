@@ -1,4 +1,10 @@
+/**
+ * @file Util
+ * @author yumao<yuzhang.lille@gmail.com>
+ */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+// from AngularJS
 function isDate(value) {
     return Object.prototype.toString.call(value) === '[object Date]';
 }
@@ -28,7 +34,7 @@ function equals(o1, o2) {
         return false;
     }
     if (o1 !== o1 && o2 !== o2) {
-        return true;
+        return true; // NaN === NaN
     }
     var t1 = typeof o1;
     var t2 = typeof o2;
