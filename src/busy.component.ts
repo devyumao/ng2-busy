@@ -5,7 +5,6 @@
 
 import {
     Component,
-    Compiler,
     NgModule,
     NgModuleFactory,
     Injectable,
@@ -15,6 +14,7 @@ import {
 import {trigger, state, style, transition, animate} from '@angular/animations';
 
 import {PromiseTrackerService} from './promise-tracker.service';
+import { CustomCompiler } from './busy.module';
 
 
 const inactiveStyle = style({
@@ -56,7 +56,7 @@ export class BusyComponent implements DoCheck, OnDestroy {
 
     constructor(
         private tracker: PromiseTrackerService,
-        private compiler: Compiler
+        private compiler: CustomCompiler
     ) {}
 
     ngDoCheck() {

@@ -16,6 +16,13 @@ import {BusyConfig} from './busy-config';
 
 // Workaround for Compiler in AOT
 // https://github.com/angular/angular/issues/15510#issuecomment-294301758
+//
+export class CustomCompiler extends Compiler {
+    constructor() {
+        super();
+    }
+}
+
 export function createJitCompiler() {
     return new JitCompilerFactory([{useDebug: false, useJit: true}]).createCompiler();
 }
@@ -31,7 +38,10 @@ export function createJitCompiler() {
     ],
     providers: [
         BusyService,
-        {provide: Compiler, useFactory: createJitCompiler},
+        {
+            provide: CustomCompiler, 
+            useFactory: createJitCompiler
+        },
     ],
     exports: [BusyDirective],
     entryComponents: [
