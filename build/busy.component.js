@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var animations_1 = require("@angular/animations");
 var promise_tracker_service_1 = require("./promise-tracker.service");
+var busy_module_1 = require("./busy.module");
 var inactiveStyle = animations_1.style({
     opacity: 0,
     transform: 'translateY(-40px)'
@@ -90,7 +91,7 @@ BusyComponent.decorators = [
 /** @nocollapse */
 BusyComponent.ctorParameters = function () { return [
     { type: promise_tracker_service_1.PromiseTrackerService, },
-    { type: core_1.Compiler, },
+    { type: busy_module_1.InjectionCompiler, },
 ]; };
 exports.BusyComponent = BusyComponent;
 //# sourceMappingURL=busy.component.js.map
