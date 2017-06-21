@@ -6,6 +6,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // Inspired by angular-promise-tracker
 // Add Observable Subscription
+// The basic idea: each time we add one or more promises to an instance of a promiseTracker,
+// that instance's active() method will return true until all added promises are resolved.
+// A common use case is showing some sort of loading spinner while some http requests are loading.
 var core_1 = require("@angular/core");
 var Subscription_1 = require("rxjs/Subscription");
 var PromiseTrackerService = (function () {
@@ -39,6 +42,22 @@ var PromiseTrackerService = (function () {
             }, options.minDuration + (options.delay || 0));
         }
     };
+    PromiseTrackerService.prototype.isActive = function () {
+        if (this.delayPromise) {
+            return false;
+        }
+        if (!this.delayJustFinished) {
+            if (this.durationPromise) {
+                return true;
+            }
+            return this.promiseList.length > 0;
+        }
+        this.delayJustFinished = false;
+        if (this.promiseList.length === 0) {
+            this.durationPromise = null;
+        }
+        return this.promiseList.length > 0;
+    };
     PromiseTrackerService.prototype.addPromise = function (promise) {
         var _this = this;
         if (this.promiseList.indexOf(promise) !== -1) {
@@ -59,22 +78,6 @@ var PromiseTrackerService = (function () {
             return;
         }
         this.promiseList.splice(index, 1);
-    };
-    PromiseTrackerService.prototype.isActive = function () {
-        if (this.delayPromise) {
-            return false;
-        }
-        if (!this.delayJustFinished) {
-            if (this.durationPromise) {
-                return true;
-            }
-            return this.promiseList.length > 0;
-        }
-        this.delayJustFinished = false;
-        if (this.promiseList.length === 0) {
-            this.durationPromise = null;
-        }
-        return this.promiseList.length > 0;
     };
     return PromiseTrackerService;
 }());

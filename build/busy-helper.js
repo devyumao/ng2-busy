@@ -1,31 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * @file Util
  * @author yumao<yuzhang.lille@gmail.com>
  */
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-// from AngularJS
-function isDate(value) {
-    return Object.prototype.toString.call(value) === '[object Date]';
-}
-exports.isDate = isDate;
-function isRegExp(value) {
-    return Object.prototype.toString.call(value) === '[object RegExp]';
-}
-exports.isRegExp = isRegExp;
-function isWindow(obj) {
-    return obj && obj.window === obj;
-}
-exports.isWindow = isWindow;
-function isFunction(value) {
-    return typeof value === 'function';
-}
-exports.isFunction = isFunction;
-function isDefined(value) {
-    return typeof value !== 'undefined';
-}
-exports.isDefined = isDefined;
-function equals(o1, o2) {
+function objectEquals(o1, o2) {
     if (o1 === o2) {
         return true;
     }
@@ -46,9 +25,10 @@ function equals(o1, o2) {
             if (!Array.isArray(o2)) {
                 return false;
             }
-            if ((length = o1.length) === o2.length) {
+            length = o1.length;
+            if (length === o2.length) {
                 for (key = 0; key < length; key++) {
-                    if (!equals(o1[key], o2[key])) {
+                    if (!objectEquals(o1[key], o2[key])) {
                         return false;
                     }
                 }
@@ -59,7 +39,7 @@ function equals(o1, o2) {
             if (!isDate(o2)) {
                 return false;
             }
-            return equals(o1.getTime(), o2.getTime());
+            return objectEquals(o1.getTime(), o2.getTime());
         }
         else if (isRegExp(o1)) {
             if (!isRegExp(o2)) {
@@ -75,11 +55,11 @@ function equals(o1, o2) {
             ;
             keySet = Object.create(null);
             for (key in o1) {
-                if (key.charAt(0) === '$' || isFunction(o1[key])) {
+                if (isFunction(o1[key])) {
                     continue;
                 }
                 ;
-                if (!equals(o1[key], o2[key])) {
+                if (!objectEquals(o1[key], o2[key])) {
                     return false;
                 }
                 keySet[key] = true;
@@ -97,5 +77,25 @@ function equals(o1, o2) {
     }
     return false;
 }
-exports.equals = equals;
-//# sourceMappingURL=util.js.map
+exports.objectEquals = objectEquals;
+function isDate(value) {
+    return Object.prototype.toString.call(value) === '[object Date]';
+}
+exports.isDate = isDate;
+function isRegExp(value) {
+    return Object.prototype.toString.call(value) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+function isWindow(obj) {
+    return obj && obj.window === obj;
+}
+exports.isWindow = isWindow;
+function isFunction(value) {
+    return typeof value === 'function';
+}
+exports.isFunction = isFunction;
+function isDefined(value) {
+    return typeof value !== 'undefined';
+}
+exports.isDefined = isDefined;
+//# sourceMappingURL=busy-helper.js.map
