@@ -6,9 +6,9 @@ export declare class PromiseTrackerService {
     delayJustFinished: boolean;
     minDuration: number;
     reset(options: IPromiseTrackerOptions): void;
+    isActive(): boolean;
     private addPromise(promise);
     private finishPromise(promise);
-    isActive(): boolean;
 }
 export interface IPromiseTrackerOptions {
     minDuration: number;

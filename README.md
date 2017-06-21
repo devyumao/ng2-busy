@@ -155,6 +155,25 @@ import {BusyModule, BusyConfig} from 'angular2-busy';
 export class AppModule
 ```
 
+If you face an error on Angular 4 like this:
+ `ERROR in Error encountered resolving symbol values statically. Calling function 'BusyConfig', function calls are not supported. Consider replacing the function or lambda with a reference to an exported function,`
+ , you can supply BusyConfig as a provider rather than performing a forRoot() call statically during the import. For example, in your app module:
+
+```typescript
+export function busyConfigFactory() {
+  return new BusyConfig({
+     template: '<div class="ng-busy-square-spinner"></div>'
+  });
+}
+```
+And in your `providers` array you can provide `BusyConfig` using the function above:
+```typescript
+providers: [ 
+  ...
+  { provide: BusyConfig, useFactory: busyConfigFactory } 
+]
+```
+
 ## FAQ
 
 ### The indicator's position is not inside the `ngBusy` container

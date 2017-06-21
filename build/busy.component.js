@@ -7,9 +7,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var animations_1 = require("@angular/animations");
 var promise_tracker_service_1 = require("./promise-tracker.service");
+var busy_module_1 = require("./busy.module");
 var inactiveStyle = animations_1.style({
-    opacity: 0,
-    transform: 'translateY(-40px)'
+    opacity: 0
 });
 var timing = '.3s ease';
 ;
@@ -56,14 +56,14 @@ var BusyComponent = (function () {
         /** @nocollapse */
         TemplateModule.ctorParameters = function () { return []; };
         this.TemplateComponent = TemplateComponent;
-        this.nmf = this.compiler.compileModuleSync(TemplateModule);
+        this.factory = this.compiler.compileModuleSync(TemplateModule);
     };
     BusyComponent.prototype.clearDynamicTemplateCache = function () {
-        if (!this.nmf) {
+        if (!this.factory) {
             return;
         }
-        this.compiler.clearCacheFor(this.nmf.moduleType);
-        this.nmf = null;
+        this.compiler.clearCacheFor(this.factory.moduleType);
+        this.factory = null;
     };
     BusyComponent.prototype.isActive = function () {
         return this.tracker.isActive();
@@ -73,13 +73,15 @@ var BusyComponent = (function () {
 BusyComponent.decorators = [
     { type: core_1.Component, args: [{
                 selector: 'ng-busy',
-                template: "\n        <div [class]=\"wrapperClass\" *ngIf=\"isActive()\" @flyInOut>\n            <ng-container *ngComponentOutlet=\"TemplateComponent; ngModuleFactory: nmf;\"></ng-container>\n        </div>\n    ",
+                template: "\n      <div [class]=\"wrapperClass\" *ngIf=\"isActive()\" @flyInOut>\n          <ng-container *ngComponentOutlet=\"TemplateComponent; ngModuleFactory: factory;\"></ng-container>\n      </div>\n  ",
                 animations: [
                     animations_1.trigger('flyInOut', [
+                        // Enter
                         animations_1.transition('void => *', [
                             inactiveStyle,
                             animations_1.animate(timing)
                         ]),
+                        // Leave
                         animations_1.transition('* => void', [
                             animations_1.animate(timing, inactiveStyle)
                         ])
@@ -90,7 +92,7 @@ BusyComponent.decorators = [
 /** @nocollapse */
 BusyComponent.ctorParameters = function () { return [
     { type: promise_tracker_service_1.PromiseTrackerService, },
-    { type: core_1.Compiler, },
+    { type: busy_module_1.JitCompiler, },
 ]; };
 exports.BusyComponent = BusyComponent;
 //# sourceMappingURL=busy.component.js.map

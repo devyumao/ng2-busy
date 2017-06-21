@@ -14,8 +14,15 @@ import {BusyBackdropComponent} from './busy-backdrop.component';
 import {BusyComponent} from './busy.component';
 import {BusyConfig} from './busy-config';
 
+export class JitCompiler extends Compiler {
+    constructor() {
+        super();
+    }
+}
+
 // Workaround for Compiler in AOT
 // https://github.com/angular/angular/issues/15510#issuecomment-294301758
+//
 export function createJitCompiler() {
     return new JitCompilerFactory([{useDebug: false, useJit: true}]).createCompiler();
 }
@@ -31,7 +38,10 @@ export function createJitCompiler() {
     ],
     providers: [
         BusyService,
-        {provide: Compiler, useFactory: createJitCompiler},
+        {
+            provide: JitCompiler, 
+            useFactory: createJitCompiler
+        }
     ],
     exports: [BusyDirective],
     entryComponents: [

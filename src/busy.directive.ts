@@ -1,8 +1,3 @@
-/**
- * @file Directive: Busy
- * @author yumao<yuzhang.lille@gmail.com>
- */
-
 import {
     Directive,
     Component,
@@ -11,34 +6,38 @@ import {
     ViewContainerRef,
     ComponentFactoryResolver,
     ComponentRef,
+    OnDestroy,
     Injector
 } from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 
-import {equals} from './util';
-import {PromiseTrackerService} from './promise-tracker.service';
-import {BusyService} from './busy.service';
-import {IBusyConfig} from './busy-config';
-import {BusyComponent} from './busy.component';
-import {BusyBackdropComponent} from './busy-backdrop.component';
+import { objectEquals } from './busy-helper';
+import { PromiseTrackerService } from './promise-tracker.service';
+import { BusyService } from './busy.service';
+import { IBusyConfig } from './busy-config';
+import { BusyComponent } from './busy.component';
+import { BusyBackdropComponent } from './busy-backdrop.component';
 
 /**
  * ### Syntax
  *
  * - `<div [ngBusy]="busy">...</div>`
  * - `<div [ngBusy]="[busyA, busyB, busyC]">...</div>`
- * - `<div [ngBusy]="{busy: busy, message: 'Loading...', backdrop: false, delay: 200, minDuration: 600}">...</div>`
+ * - `<div [ngBusy]="{busy: busy, message: 'Loading...',
+ *                    backdrop: false, delay: 200, minDuration: 600}">...</div>`
  */
 @Directive({
     selector: '[ngBusy]',
     providers: [PromiseTrackerService]
 })
-export class BusyDirective implements DoCheck {
+export class BusyDirective implements DoCheck, OnDestroy {
+
     @Input('ngBusy') options: any;
-    private optionsRecord: any;
-    private optionsNorm: IBusyConfig;
+
     template: string;
     backdrop: boolean;
+    private optionsRecord: any;
+    private optionsNorm: IBusyConfig;
     private busyRef: ComponentRef<BusyComponent>;
     private backdropRef: ComponentRef<BusyBackdropComponent>;
 
@@ -51,11 +50,50 @@ export class BusyDirective implements DoCheck {
     ) {
     }
 
-    private normalizeOptions(options: any) {
-        if (!options) {
-            options = {busy: null};
+    ngDoCheck() {
+        const options = this.optionsNorm = this.normalizeoptions(this.options);
+
+        if (!this.dectectoptionsChange()) {
+            return;
         }
-        else if (Array.isArray(options)
+
+        if (this.busyRef) {
+            this.busyRef.instance.message = options.message;
+        }
+
+        if (!objectEquals(options.busy, this.tracker.promiseList)) {
+            this.tracker.reset({
+                promiseList: options.busy,
+                delay: options.delay,
+                minDuration: options.minDuration
+            });
+        }
+
+        if (!this.busyRef
+            || this.template !== options.template
+            || this.backdrop !== options.backdrop
+        ) {
+            this.destroyComponents();
+
+            this.template = options.template;
+            this.backdrop = options.backdrop;
+
+            if (options.backdrop) {
+              this.createBackdrop();
+            }
+
+            this.createBusy();
+        }
+    }
+
+    ngOnDestroy() {
+        this.destroyComponents();
+    }
+
+    private normalizeoptions(options: any) {
+        if (!options) {
+            options = {busy: undefined};
+        }else if (Array.isArray(options)
             || options instanceof Promise
             || options instanceof Subscription
         ) {
@@ -69,65 +107,31 @@ export class BusyDirective implements DoCheck {
         return options;
     }
 
-    private dectectOptionsChange() {
-        if (equals(this.optionsNorm, this.optionsRecord)) {
+    private dectectoptionsChange() {
+        if (objectEquals(this.optionsNorm, this.optionsRecord)) {
             return false;
         }
         this.optionsRecord = this.optionsNorm;
         return true;
     }
 
-    // As ngOnChanges does not work on Object detection, ngDoCheck is using
-    ngDoCheck() {
-        const options = this.optionsNorm = this.normalizeOptions(this.options);
-
-        if (!this.dectectOptionsChange()) {
-            return;
-        }
-
-        if (this.busyRef) {
-            this.busyRef.instance.message = options.message;
-        }
-
-        !equals(options.busy, this.tracker.promiseList)
-            && this.tracker.reset({
-                promiseList: options.busy,
-                delay: options.delay,
-                minDuration: options.minDuration
-            });
-
-        if (!this.busyRef
-            || this.template !== options.template
-            || this.backdrop !== options.backdrop
-        ) {
-            this.destroyComponents();
-
-            this.template = options.template;
-            this.backdrop = options.backdrop;
-
-            options.backdrop && this.createBackdrop();
-
-            this.createBusy();
-        }
-    }
-
-    ngOnDestroy() {
-        this.destroyComponents();
-    }
-
     private destroyComponents() {
-        this.busyRef && this.busyRef.destroy();
-        this.backdropRef && this.backdropRef.destroy();
+        if (this.busyRef) {
+          this.busyRef.destroy();
+        }
+        if (this.backdropRef) {
+          this.backdropRef.destroy();
+        }
     }
 
     private createBackdrop() {
         const backdropFactory = this.cfResolver.resolveComponentFactory(BusyBackdropComponent);
-        this.backdropRef = this.vcRef.createComponent(backdropFactory, null, this.injector);
+        this.backdropRef = this.vcRef.createComponent(backdropFactory, undefined, this.injector);
     }
 
     private createBusy() {
         const busyFactory = this.cfResolver.resolveComponentFactory(BusyComponent);
-        this.busyRef = this.vcRef.createComponent(busyFactory, null, this.injector);
+        this.busyRef = this.vcRef.createComponent(busyFactory, undefined, this.injector);
 
         const {message, wrapperClass, template} = this.optionsNorm;
         const instance = this.busyRef.instance;
