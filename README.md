@@ -94,7 +94,8 @@ The `ngBusy` directive expects a ***busy thing***, which means:
 - A promise
 - Or an Observable's subscription
 - Or an array of them
-- Or a configuration object
+- Or a configuration object 
+  - Using a configuration object, you can make use of a boolean for the `busy` property of the config
 
 In other words, you may use flexible syntax:
 
@@ -113,11 +114,16 @@ In other words, you may use flexible syntax:
 <div [ngBusy]="{busy: busy, message: 'Loading...', backdrop: false, delay: 200, minDuration: 600}"></div>
 ```
 
-## Options
+```html
+<!-- Advanced syntax w/ async Piped boolean value -->
+<div [ngBusy]="{busy: (myCurrentState$ | async).isLoading, message: 'Loading Current Data...', backdrop: true, delay: 100, minDuration: 400}"></div>
+```
+
+## Configuration Object Options
 
 | Option | Required | Default | Details |
 | ---- | ---- | ---- | ---- |
-| busy | Required | null | A busy thing (or an array of busy things) that will cause the loading indicator to show. |
+| busy | Required | null | A busy thing (or an array of busy things), as described <a href="#directive-syntax">above</a>, that will cause the loading indicator to show. |
 | message | Optional | 'Please wait...' | The message to show in the indicator which will reflect the updated values as they are changed. |
 | backdrop | Optional | true | A faded backdrop will be shown behind the indicator if true. |
 | template | Optional | A default template string | If provided, the custom template will be shown in place of the default indicatory template. The scope can be augmented with a `{{message}}` field containing the indicator message text. |
